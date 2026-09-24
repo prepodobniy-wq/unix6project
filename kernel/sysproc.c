@@ -110,3 +110,11 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+uint64
+sys_admintest(void)
+{
+  if(sec_ok(ROLE_ADMIN))
+    return 0;
+  return -1;
+}

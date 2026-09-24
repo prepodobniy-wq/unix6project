@@ -149,6 +149,19 @@ found:
   return p;
 }
 
+int
+sec_ok(int need)
+{
+  struct proc *p;
+
+  p = myproc();
+  if(p->u_role == ROLE_ADMIN)
+    return 1;
+  if(p->u_role == need)
+    return 1;
+  return 0;
+}
+
 // free a proc structure and the data hanging from it,
 // including user pages.
 // p->lock must be held.

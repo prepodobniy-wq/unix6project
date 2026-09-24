@@ -1,3 +1,7 @@
+#define ROLE_GUEST 0
+#define ROLE_ADMIN 1
+
+
 // Saved registers for kernel context switches.
 struct context {
   uint64 ra;
@@ -78,6 +82,8 @@ struct trapframe {
 
 enum procstate { UNUSED, USED, SLEEPING, RUNNABLE, RUNNING, ZOMBIE };
 
+
+
 // Per-process state
 struct proc {
   struct spinlock lock;
@@ -101,4 +107,6 @@ struct proc {
   struct file *ofile[NOFILE];  // Open files
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
+
+  int u_role;
 };
