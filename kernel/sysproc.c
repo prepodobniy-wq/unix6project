@@ -94,6 +94,9 @@ sys_kill(void)
 {
   int pid;
 
+  if(!sec_ok(ROLE_ADMIN))
+    return -1;
+
   argint(0, &pid);
   return kkill(pid);
 }
@@ -117,4 +120,28 @@ sys_admintest(void)
   if(sec_ok(ROLE_ADMIN))
     return 0;
   return -1;
+}
+
+// sleep function
+uint64
+sys_sleep(void)
+{
+  int n;
+  uint ticks0;
+
+  argint(0, &n);
+  acquire(&tickslock);
+  ticks0 = ticks;
+  while(ticks - ticks0 < n){
+    if(killed(myproc())){
+      release(&tickslock);
+      return -1;
+    }
+    sleep_prepare(&ticks);
+    release(&tickslock);
+    sleep();
+    acquire(&tickslock);
+  }
+  release(&tickslock);
+  return 0;
 }
